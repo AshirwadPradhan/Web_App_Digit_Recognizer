@@ -4,13 +4,15 @@ from keras.models import load_model
 from util import img_resize
 from PIL import Image
 
+def lModel():
+    model = load_model('model/mnist_model.h5')
+    return model
 
 def pred_dig(X_test):
     X_test = X_test.reshape(1,28, 28, 1).astype('float32')
 
     X_test /= 255
-
-    model = load_model('model/mnist_model.h5')
+    model = lModel()
     y_pred = model.predict_proba(X_test)
 
     y_conv = []
