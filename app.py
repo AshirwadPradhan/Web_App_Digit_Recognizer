@@ -20,7 +20,7 @@ def homepage():
 def convertImage(imgData1):
     imgstr = str(imgData1)
     imgstr = re.search(r'base64,(.*)',imgstr).group(1)
-    print(imgstr)
+    # print(imgstr)
     # imgstr = imgData1
     with open('output.png','wb') as output:
         output.write(base64.b64decode(imgstr))
@@ -34,7 +34,7 @@ def predict():
     img_arr = np.array(img)
     X_test = img_resize(img_arr)
     num = pred_dig(X_test)
-    print(num)
+    # print(num)
 
     return make_response(str(num), 200)
 

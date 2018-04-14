@@ -37,7 +37,7 @@
 
             // Draw a filled circle
             ctx.beginPath();
-            ctx.lineTo(x,y)
+            ctx.lineTo(x, y)
             ctx.closePath();
             ctx.stroke();
         }
@@ -46,8 +46,8 @@
         function clearCanvas(canvas, ctx) {
             ctx.clearRect(0, 0, canvas.width, canvas.height);
             ctx.fillStyle = "white";
-    ctx.fillRect(0, 0, 280, 280);
-    $('#num').text('');
+            ctx.fillRect(0, 0, 280, 280);
+            $('#num').text('');
         }
 
         // Keep track of the mouse button being pressed and draw a dot at current location
@@ -96,8 +96,8 @@
             // If the browser supports the canvas tag, get the 2d drawing context for this canvas
             if (canvas.getContext)
                 ctx = canvas.getContext('2d');
-                ctx.fillStyle = "white";
-	ctx.fillRect(0, 0, 280, 280);
+            ctx.fillStyle = "white";
+            ctx.fillRect(0, 0, 280, 280);
 
             // Check that we have a valid context to draw on/with before adding event handlers
             if (ctx) {
@@ -114,8 +114,9 @@
 
     <div class="container">
         <div class="jumbotron bg-primary">
-            <h1>Digits Predictor</h1>
-            <p>A simple CNN based digits predictor</p>
+            <kbd class="text-light display-4">DIGITS PREDICTER</kbd>
+            <p></p>
+            <h5 class="text-light font-weight-bold text-uppercase">A simple CNN based digits predictor</h5>
         </div>
         <div class="row">
             <div class="col">
@@ -125,13 +126,17 @@
                     </canvas>
                 </div>
                 <br/>
-                <br/>
-                <button class="btn" id="predict_btn">Predict</button>
-                <button class="btn" id="clear_btn" onclick="clearCanvas(canvas, ctx);">Clear Pad</button>
+                <button class="btn btn-success" id="predict_btn">Predict</button>
+                <button class="btn btn-danger" id="clear_btn" onclick="clearCanvas(canvas, ctx);">Clear Pad</button>
             </div>
             <div class="col">
-                <h3>Predicted Digit</h2>
-                    <p class="text-center h2" id="num"></p>
+                <div class="card">
+                    <div class="card-body">
+                        <h3 class="text-center text-uppercase">Predicted Digit</h3>
+                        <p class="text-center display-1" id="num"></p>
+                    </div>
+                </div>
+
             </div>
         </div>
 
