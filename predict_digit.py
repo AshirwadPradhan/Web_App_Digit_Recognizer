@@ -25,7 +25,9 @@ def pred_dig(X_test):
     return y_conv[0]
 
 if __name__ == '__main__':
-    img = Image.open('test_img/two.png').convert('L')
+    img = Image.open('output.png').convert('L')
+
     img_arr = np.array(img)
+    print(img_arr)
     X_test = img_resize(img_arr)
     print(pred_dig(X_test))

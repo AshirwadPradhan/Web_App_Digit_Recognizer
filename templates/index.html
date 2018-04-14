@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery.min.js"></script>
+
+    <title>Numbers Prediction</title>
+
+
+
+
+
+    <script type="text/javascript">
+        // Variables for referencing the canvas and 2dcanvas context
+        var canvas, ctx;
+
+        // Variables to keep track of the mouse position and left-button status 
+        var mouseX, mouseY, mouseDown = 0;
+
+        // Draws a dot at a specific position on the supplied canvas name
+        // Parameters are: A canvas context, the x position, the y position, the size of the dot
+        function drawDot(ctx, x, y, size) {
+            // Let's use black by setting RGB values to 0, and 255 alpha (completely opaque)
+            r = 0; g = 0; b = 0; a = 255;
+
+            // Select a fill style
+            // ctx.fillStyle = "rgba(" + r + "," + g + "," + b + "," + (a / 255) + ")";
+
+            ctx.strokeStyle = "black"
+            ctx.lineWidth = 10;
+            ctx.lineJoin = ctx.lineCap = 'round';
+
+            // Draw a filled circle
+            ctx.beginPath();
+            ctx.lineTo(x,y)
+            ctx.closePath();
+            ctx.stroke();
+        }
+
+        // Clear the canvas context using the canvas width and height
+        function clearCanvas(canvas, ctx) {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = "white";
+    ctx.fillRect(0, 0, 280, 280);
+    $('#num').text('');
+        }
+
+        // Keep track of the mouse button being pressed and draw a dot at current location
+        function sketchpad_mouseDown() {
+            mouseDown = 1;
+            drawDot(ctx, mouseX, mouseY, 12);
+        }
+
+        // Keep track of the mouse button being released
+        function sketchpad_mouseUp() {
+            mouseDown = 0;
+        }
+
+        // Keep track of the mouse position and draw a dot if mouse button is currently pressed
+        function sketchpad_mouseMove(e) {
+            // Update the mouse co-ordinates when moved
+            getMousePos(e);
+
+            // Draw a dot if the mouse button is currently being pressed
+            if (mouseDown == 1) {
+                drawDot(ctx, mouseX, mouseY, 12);
+            }
+        }
+
+        // Get the current mouse position relative to the top-left of the canvas
+        function getMousePos(e) {
+            if (!e)
+                var e = event;
+
+            if (e.offsetX) {
+                mouseX = e.offsetX;
+                mouseY = e.offsetY;
+            }
+            else if (e.layerX) {
+                mouseX = e.layerX;
+                mouseY = e.layerY;
+            }
+        }
+
+
+        // Set-up the canvas and add our event handlers after the page has loaded
+        function init() {
+            // Get the specific canvas element from the HTML document
+            canvas = document.getElementById('sketchpad');
+
+            // If the browser supports the canvas tag, get the 2d drawing context for this canvas
+            if (canvas.getContext)
+                ctx = canvas.getContext('2d');
+                ctx.fillStyle = "white";
+	ctx.fillRect(0, 0, 280, 280);
+
+            // Check that we have a valid context to draw on/with before adding event handlers
+            if (ctx) {
+                canvas.addEventListener('mousedown', sketchpad_mouseDown, false);
+                canvas.addEventListener('mousemove', sketchpad_mouseMove, false);
+                window.addEventListener('mouseup', sketchpad_mouseUp, false);
+            }
+        }
+    </script>
+
+</head>
+
+<body onload="init()">
+
+    <div class="container">
+        <div class="jumbotron bg-primary">
+            <h1>Digits Predictor</h1>
+            <p>A simple CNN based digits predictor</p>
+        </div>
+        <div class="row">
+            <div class="col">
+                <div id="paint">
+                    <canvas id="sketchpad" style="border: 1px solid black;" width="280" height="280">
+                        Sorry Your browser does not support Canvas. Try upgrading it.
+                    </canvas>
+                </div>
+                <br/>
+                <br/>
+                <button class="btn" id="predict_btn">Predict</button>
+                <button class="btn" id="clear_btn" onclick="clearCanvas(canvas, ctx);">Clear Pad</button>
+            </div>
+            <div class="col">
+                <h3>Predicted Digit</h2>
+                    <p class="text-center h2" id="num"></p>
+            </div>
+        </div>
+
+    </div>
+
+
+    <!-- <script src="index.js"></script>  -->
+
+    <script type="text/javascript">
+        // $(function () {
+        //     var drawpad = $('#drawpad').sketch();
+        // });
+
+
+        $('#predict_btn').on('click', function (e) {
+            var canvasobj = document.getElementById('sketchpad');
+            var ctx = canvasobj.getContext("2d");
+
+            var img = canvasobj.toDataURL();
+            $.ajax({
+                type: "POST",
+                url: "/predict",
+                data: img,
+                contentType: "application/json; charset=utf-8",
+            }).done(function (data) {
+                console.log(data);
+                $('#num').text(data);
+                data = 0
+            });
+        });
+
+
+
+        // $('#predict_btn').on('click', function (e){
+        //         var canvas = document.getElementById('drawpad');
+        //         $.ajax({
+        //             type: "POST",
+        //             url: "/predict",
+        //             data: JSON.stringify({'image':canvas.toDataURL()}),
+        //             contentType: "application/json; charset=utf-8",
+        //         })
+        //     });
+
+        // $('#clear_btn').on('click', function (e) {
+        //     var canvas = document.getElementById('drawpad');
+        //     var context = canvas.getContext('2d');
+        //     context.clearRect(0, 0, canvas.width, canvas.height);
+        //     $('#drawpad').sketch('actions', []);
+        //     $('#num').text('');
+        // });
+    </script>
+
+</body>
+
+</html>
